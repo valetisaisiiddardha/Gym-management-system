@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Management System - Complete Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.8);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 4px rgba(78,205,196,0.1);
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(78,205,196,0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+        }
+
+        .member-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(78,205,196,0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .member-item:hover {
+            background: rgba(78,205,196,0.2);
+            transform: translateX(5px);
+        }
+
+        .member-info h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .member-meta {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .schedule-day {
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.7);
+            font-weight: 500;
+        }
+
+        .schedule-slot {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .revenue-chart {
+            height: 200px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .active-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ Gym Management System</h1>
+            <p>Complete Dashboard for Member Management, Scheduling & Analytics</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <!-- Stats Overview -->
+            <div class="card">
+                <h2>📊 Quick Stats</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalMembers">247</span>
+                        <span class="stat-label">Total Members</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="activeMembers">189</span>
+                        <span class="stat-label">Active Today</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="revenue">$12,450</span>
+                        <span class="stat-label">Monthly Revenue</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="attendance">78%</span>
+                        <span class="stat-label">Attendance Rate</span>
+                    </div>
+                </div>
+                <div class="revenue-chart" id="revenueChart"></div>
+            </div>
+
+            <!-- Add New Member -->
+            <div class="card">
+                <h2>➕ Add New Member</h2>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="memberName" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="memberEmail" placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Membership Type</label>
+                    <select id="membershipType">
+                        <option value="basic">Basic - $29/month</option>
+                        <option value="premium">Premium - $49/month</option>
+                        <option value="elite">Elite - $79/month</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="startDate">
+                </div>
+                <button class="btn btn-primary" onclick="addMember()">Add Member</button>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card">
+                <h2>⚡ Quick Actions</h2>
+                <div class="active-members">
+                    <button class="btn" onclick="checkIn()">✅ Check-in Member</button>
+                    <button class="btn" onclick="generateReport()">📈 Generate Report</button>
+                    <button class="btn" onclick="sendNotifications()">📱 Send Notifications</button>
+                    <button class="btn btn-danger" onclick="exportData()">💾 Export Data</button>
+                </div>
+            </div>
+
+            <!-- Class Schedule -->
+            <div class="card">
+                <h2>📅 Today's Schedule</h2>
+                <div class="schedule-grid">
+                    <div class="schedule-day"><strong>Monday</strong></div>
+                    <div class="schedule-day">6:00 AM</div>
+                    <div class="schedule-slot">Cardio Blast</div>
+                    <div class="schedule-slot">Yoga Flow</div>
+                    <div class="schedule-slot">Weight Training</div>
+                    <div class="schedule-slot">HIIT Circuit</div>
+                    <div class="schedule-slot">Spin Class</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Members List -->
+        <div class="card" style="grid-column: 1 / -1;">
+            <h2>👥 Active Members</h2>
+            <div class="member-list" id="memberList">
+                <!-- Members populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample member data
+        let members = [
+            { id: 1, name: 'Mike Johnson', email: 'mike@gym.com', type: 'elite', joinDate: '2025-01-15', status: 'active', checkins: 28 },
+            { id: 2, name: 'Sarah Wilson', email: 'sarah@gym.com', type: 'premium', joinDate: '2025-02-01', status: 'active', checkins: 22 },
+            { id: 3, name: 'David Chen', email: 'david@gym.com', type: 'basic', joinDate: '2025-03-10', status: 'active', checkins: 15 },
+            { id: 4, name: 'Emily Davis', email: 'emily@gym.com', type: 'elite', joinDate: '2025-01-20', status: 'active', checkins: 31 }
+        ];
+
+        let nextId = 5;
+        let revenueData = [1200, 1350, 1280, 1450, 1620];
+
+        // Initialize dashboard
+        function initDashboard() {
+            updateStats();
+            renderMembers();
+            initRevenueChart();
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+        }
+
+        function updateStats() {
+            document.getElementById('totalMembers').textContent = members.length;
+            const activeToday = members.filter(m => m.status === 'active').length;
+            document.getElementById('activeMembers').textContent = activeToday;
+            document.getElementById('revenue').textContent = '$' + (activeToday * 55).toLocaleString();
+            document.getElementById('attendance').textContent = Math.round(activeToday / members.length * 100) + '%';
+        }
+
+        function renderMembers() {
+            const container = document.getElementById('memberList');
+            container.innerHTML = members.slice(0, 8).map(member => `
+                <div class="member-item">
+                    <div class="member-info">
+                        <h4>${member.name}</h4>
+                        <div class="member-meta">
+                            ${member.type.toUpperCase()} • ${member.checkins} check-ins
+                        </div>
+                    </div>
+                    <div>
+                        <span style="color: ${member.status === 'active' ? '#27ae60' : '#e74c3c'}; font-weight: 600;">
+                            ${member.status.toUpperCase()}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addMember() {
+            const name = document.getElementById('memberName').value;
+            const email = document.getElementById('memberEmail').value;
+            const type = document.getElementById('membershipType').value;
+            const date = document.getElementById('startDate').value;
+
+            if (!name || !email) {
+                alert('Please fill in name and email');
+                return;
+            }
+
+            members.unshift({
+                id: nextId++,
+                name,
+                email,
+                type,
+                joinDate: date,
+                status: 'active',
+                checkins: 0
+            });
+
+            document.getElementById('memberName').value = '';
+            document.getElementById('memberEmail').value = '';
+            updateStats();
+            renderMembers();
+            alert('Member added successfully! 🎉');
+        }
+
+        function checkIn() {
+            const activeMembers = members.filter(m => m.status === 'active');
+            if (activeMembers.length > 0) {
+                const randomMember = activeMembers[Math.floor(Math.random() * activeMembers.length)];
+                randomMember.checkins++;
+                updateStats();
+                renderMembers();
+                alert(`✅ ${randomMember.name} checked in!`);
+            }
+        }
+
+        function generateReport() {
+            const totalRevenue = members.length * 55;
+            alert(`📈 Monthly Report Generated!\n\nTotal Members: ${members.length}\nActive: ${members.filter(m => m.status === 'active').length}\nRevenue: $${totalRevenue.toLocaleString()}`);
+        }
+
+        function sendNotifications() {
+            alert('📱 SMS/Email notifications sent to all active members!');
+        }
+
+        function exportData() {
+            const dataStr = JSON.stringify(members, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `gym_members_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function initRevenueChart() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 180;
+            document.getElementById('revenueChart').appendChild(canvas);
+            
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(0, 'rgba(78, 205, 196, 0.8)');
+            gradient.addColorStop(1, 'rgba(78, 205, 196, 0.2)');
+
+            // Simple bar chart
+            const maxRevenue = Math.max(...revenueData);
+            revenueData.forEach((revenue, index) => {
+                const barWidth = 40;
+                const barHeight = (revenue / maxRevenue) * 140;
+                const x = index * 55 + 20;
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, 200 - barHeight, barWidth, barHeight);
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText(`$${revenue}`, x + barWidth/2, 190);
+            });
+        }
+
+        // Auto check-ins simulation
+        setInterval(() => {
+            if (Math.random() < 0.3 && members.length > 0) {
+                checkIn();
+            }
+        }, 10000);
+
+        // Initialize
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>
